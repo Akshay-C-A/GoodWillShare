@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class NGO_Accept_Page extends StatefulWidget {
@@ -11,12 +12,18 @@ class NGO_Accept_Page extends StatefulWidget {
 class _NGO_Accept_PageState extends State<NGO_Accept_Page> {
   @override
   Widget build(BuildContext context) {
+    User? currentUser = FirebaseAuth.instance.currentUser;
+    String userEmail = currentUser?.email ?? 'anonymous';
     return Scaffold(
       appBar: AppBar(
         title: Text("Accepted Items"),
       ),
       body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection('ngo_accept').snapshots(),
+        stream: FirebaseFirestore.instance
+            .collection('ngo_accept')
+            .doc(userEmail)
+            .collection('acccepted')
+            .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));

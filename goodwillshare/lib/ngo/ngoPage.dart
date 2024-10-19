@@ -76,8 +76,8 @@ class _NGO_PageState extends State<NGO_Page> {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                if (_selectedIndex ==
-                    0) // Only show 'Accept' button for pending items
+                if (donation['status'] ==
+                    "pending") // Only show 'Accept' button for pending items
                   ElevatedButton(
                     onPressed: () async {
                       User? currentUser = FirebaseAuth.instance.currentUser;
@@ -86,8 +86,14 @@ class _NGO_PageState extends State<NGO_Page> {
                       //to add to ngo accepted list
                       await FirebaseFirestore.instance
                           .collection('ngo_accept')
-                          .doc(userEmail).collection('acccepted')
+                          .doc(userEmail)
+                          .collection('acccepted')
                           .add(donation);
+
+                      await FirebaseFirestore.instance
+                          .collection('donations')
+                          .doc(donationId)
+                          .update({'status': 'accepted'});
 
                       //to add to doner accept list
                       await FirebaseFirestore.instance
