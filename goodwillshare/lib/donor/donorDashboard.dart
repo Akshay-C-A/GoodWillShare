@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'addnewDonation.dart'; // Import the addnewDonation page
 
 class DonorDashboard extends StatefulWidget {
   const DonorDashboard({Key? key}) : super(key: key);
@@ -18,6 +19,12 @@ class _DonorDashboardState extends State<DonorDashboard> {
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+      if (_selectedIndex == 1) { // Check if 'Add' tab is selected
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => addnewDonation()), // Navigate to the addnewDonation page
+        );
+      }
     });
   }
 
