@@ -2,28 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: SignUpPage(),
-    );
-  }
-}
-
 class SignUpPage extends StatefulWidget {
   @override
   _SignUpPageState createState() => _SignUpPageState();
@@ -69,6 +47,8 @@ class _SignUpPageState extends State<SignUpPage> {
         );
 
         // Navigate to home page or next screen
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => SignUpPage()));
         // Navigator.pushReplacement(...);
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
