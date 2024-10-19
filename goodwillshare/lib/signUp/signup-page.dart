@@ -25,6 +25,8 @@ class MyApp extends StatelessWidget {
 }
 
 class SignUpPage extends StatefulWidget {
+  const SignUpPage({super.key});
+
   @override
   _SignUpPageState createState() => _SignUpPageState();
 }
@@ -65,7 +67,7 @@ class _SignUpPageState extends State<SignUpPage> {
         });
 
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Successfully signed up!')),
+          const SnackBar(content: Text('Successfully signed up!')),
         );
 
         // Navigate to home page or next screen
@@ -86,17 +88,17 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Sign Up'),
+        title: const Text('Sign Up'),
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               TextFormField(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Name',
                   border: OutlineInputBorder(),
                 ),
@@ -108,9 +110,9 @@ class _SignUpPageState extends State<SignUpPage> {
                 },
                 onChanged: (value) => name = value,
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               TextFormField(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Email',
                   border: OutlineInputBorder(),
                 ),
@@ -125,9 +127,9 @@ class _SignUpPageState extends State<SignUpPage> {
                 },
                 onChanged: (value) => email = value,
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               TextFormField(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Password',
                   border: OutlineInputBorder(),
                 ),
@@ -143,9 +145,9 @@ class _SignUpPageState extends State<SignUpPage> {
                 },
                 onChanged: (value) => password = value,
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               DropdownButtonFormField<String>(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'User Type',
                   border: OutlineInputBorder(),
                 ),
@@ -162,14 +164,14 @@ class _SignUpPageState extends State<SignUpPage> {
                   });
                 },
               ),
-              SizedBox(height: 24),
+              const SizedBox(height: 24),
               ElevatedButton(
                 onPressed: isLoading ? null : _signUp,
                 child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 16.0),
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
                   child: isLoading
-                      ? CircularProgressIndicator()
-                      : Text('Sign Up', style: TextStyle(fontSize: 18)),
+                      ? const CircularProgressIndicator()
+                      : const Text('Sign Up', style: TextStyle(fontSize: 18)),
                 ),
               ),
             ],
