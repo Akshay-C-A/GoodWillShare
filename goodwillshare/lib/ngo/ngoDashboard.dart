@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:goodwillshare/ngo/ngoAcceptPage.dart';
 import 'package:goodwillshare/ngo/ngoPage.dart';
 
 class NGO_Dashboard extends StatefulWidget {
@@ -13,7 +14,7 @@ class _NGO_DashboardState extends State<NGO_Dashboard> {
   Widget build(BuildContext context) {
     List<Widget> widgetOptions = <Widget>[
       NGO_Page(),
-      _buildAcceptedItems(),
+      NGO_Accept_Page(),
       // RequestPage(),
       // NotificationsPage(),
     ];
@@ -75,4 +76,3 @@ class _NGO_DashboardState extends State<NGO_Dashboard> {
     );
   }
 }
-

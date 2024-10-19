@@ -1,25 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class NGO_Page extends StatefulWidget {
-  const NGO_Page({super.key});
+class NGO_Accept_Page extends StatefulWidget {
+  const NGO_Accept_Page({super.key});
 
   @override
-  State<NGO_Page> createState() => _NGO_PageState();
+  State<NGO_Accept_Page> createState() => _NGO_Accept_PageState();
 }
 
-class _NGO_PageState extends State<NGO_Page> {
-  int _selectedIndex = 0; // This will handle selected tab, if needed
-
+class _NGO_Accept_PageState extends State<NGO_Accept_Page> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("NGO Page"),
+        title: Text("Accepted Items"),
       ),
       body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection('donations').snapshots(),
+        stream: FirebaseFirestore.instance.collection('ngo_accept').snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
@@ -73,39 +70,39 @@ class _NGO_PageState extends State<NGO_Page> {
                 'Contact: ${donation['contact'] ?? 'N/A'}',
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                if (_selectedIndex ==
-                    0) // Only show 'Accept' button for pending items
-                  ElevatedButton(
-                    onPressed: () async {
-                      User? currentUser = FirebaseAuth.instance.currentUser;
-                      String userEmail = currentUser?.email ?? 'anonymous';
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.end,
+            //   children: [
+            //     if (_selectedIndex ==
+            //         0) // Only show 'Accept' button for pending items
+            //       ElevatedButton(
+            //         onPressed: () async {
+            //           User? currentUser = FirebaseAuth.instance.currentUser;
+            //           String userEmail = currentUser?.email ?? 'anonymous';
 
-                      //to add to ngo accepted list
-                      await FirebaseFirestore.instance
-                          .collection('ngo_accept')
-                          .doc(userEmail).collection('acccepted')
-                          .add(donation);
+            //           //to add to ngo accepted list
+            //           await FirebaseFirestore.instance
+            //               .collection('ngo_accept')
+            //               .doc(userEmail)
+            //               .set(donation);
 
-                      //to add to doner accept list
-                      await FirebaseFirestore.instance
-                          .collection('doner_accept')
-                          .doc(donerMail)
-                          .collection('accepted')
-                          .add(donation);
+            //           //to add to doner accept list
+            //           await FirebaseFirestore.instance
+            //               .collection('doner_accept')
+            //               .doc(donerMail)
+            //               .collection('accepted')
+            //               .add(donation);
 
-                      // TODO: Implement accept functionality
-                      print('Accept: ${donation['foodName']}');
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.amberAccent,
-                    ),
-                    child: Text('Accept'),
-                  ),
-              ],
-            ),
+            //           // TODO: Implement accept functionality
+            //           print('Accept: ${donation['foodName']}');
+            //         },
+            //         style: ElevatedButton.styleFrom(
+            //           backgroundColor: Colors.amberAccent,
+            //         ),
+            //         child: Text('Accept'),
+            //       ),
+            //   ],
+            // ),
           ],
         ),
       ),
