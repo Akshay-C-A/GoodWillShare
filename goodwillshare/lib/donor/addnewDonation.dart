@@ -25,9 +25,14 @@ class _addnewDonationState extends State<addnewDonation> {
 
       // Get the current user
       User? currentUser = FirebaseAuth.instance.currentUser;
-      String userEmail = currentUser?.email ?? 'anonymous'; // Default to 'anonymous' if no user is logged in
+      String userEmail = currentUser?.email ??
+          'anonymous'; // Default to 'anonymous' if no user is logged in
 
-      await FirebaseFirestore.instance.collection('donations').add({
+      String unique = DateTime.now().toIso8601String();
+      await FirebaseFirestore.instance
+          .collection('donations')
+          .doc('$userEmail$unique')
+          .set({
         'foodName': _foodNameController.text,
         'foodQuantity': foodQuantity, // Store as an integer
         'foodExpiry': _foodExpiryController.text,

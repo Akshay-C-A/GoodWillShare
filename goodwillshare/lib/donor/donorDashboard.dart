@@ -129,7 +129,7 @@ class _DonorDashboardState extends State<DonorDashboard> {
             label: 'Add',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person), 
+            icon: Icon(Icons.person),
             label: 'Profile',
           ),
         ],
