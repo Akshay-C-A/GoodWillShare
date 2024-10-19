@@ -119,11 +119,7 @@ class _DonorDashboardState extends State<DonorDashboard> {
             label: 'Add',
           ),
           BottomNavigationBarItem(
-            icon: CircleAvatar(
-              radius: 15,
-              backgroundImage: NetworkImage(
-                  'https://example.com/profile_photo'), // Replace with the fetched profile photo URL
-            ),
+            icon: Icon(Icons.person),
             label: 'Profile',
           ),
         ],
