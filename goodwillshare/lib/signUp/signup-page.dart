@@ -16,10 +16,10 @@ class _SignUpPageState extends State<SignUpPage> {
   String email = '';
   String password = '';
   String name = '';
-  String userType = 'DONER'; // Default value
+  String userType = 'DONOR'; // Default value
   bool isLoading = false;
 
-  List<String> userTypes = ['DONER', 'NGO', 'ORGANIC FARMER'];
+  List<String> userTypes = ['DONOR', 'NGO', 'ORGANIC FARMER'];
 
   void _signUp() async {
     if (_formKey.currentState!.validate()) {
