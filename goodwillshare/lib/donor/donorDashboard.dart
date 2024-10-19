@@ -1,37 +1,154 @@
 import 'package:flutter/material.dart';
-
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: Scaffold(),
-    );
-  }
-}
+import 'package:goodwillshare/donor/donorProfile.dart';
+import 'addnewDonation.dart'; // Import the addnewDonation page
 
 class DonorDashboard extends StatefulWidget {
-  const DonorDashboard({super.key});
+  const DonorDashboard({Key? key}) : super(key: key);
 
   @override
   State<DonorDashboard> createState() => _DonorDashboardState();
 }
 
 class _DonorDashboardState extends State<DonorDashboard> {
+  // Sample data for food lists
+  final List<String> acceptedFood = ['Pizza', 'Pasta', 'Bread'];
+  final List<String> expiredFood = ['Fruits', 'Vegetables', 'Canned Goods'];
+
+  int _selectedIndex = 0;
+
+  // Navigation handler for BottomNavigationBar
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+
+      // Navigate to different pages based on selected index
+      if (_selectedIndex == 1) {
+        // Navigate to addNewDonation page when 'Add' tab is selected
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => addnewDonation()),
+        );
+      } else if (_selectedIndex == 2) {
+        // Navigate to DonorProfile page when 'Profile' tab is selected
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => donorProfile()),
+        );
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      appBar: AppBar(
+        title: Row(
+          children: [
+            Expanded(
+              child: Text(
+                'Donor Name', // Replace with donor's name from your backend
+                style: const TextStyle(fontSize: 18),
+              ),
+            ),
+            IconButton(
+              icon: const Icon(Icons.chat),
+              onPressed: () {
+                // Navigate to chat screen
+                Navigator.push(context, MaterialPageRoute(builder: (context) => ChatScreen()));
+              },
+            )
+          ],
+        ),
+        backgroundColor: Colors.teal,
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Accepted Donations',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: acceptedFood.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text(acceptedFood[index]),
+                    trailing: IconButton(
+                      icon: const Icon(Icons.chat),
+                      onPressed: () {
+                        // Navigate to chat screen with selected food
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => ChatScreen()));
+                      },
+                    ),
+                  );
+                },
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                'Expired',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: expiredFood.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text(expiredFood[index]),
+                    trailing: ElevatedButton(
+                      onPressed: () {
+                        // Add item to organic harvesters
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text('${expiredFood[index]} added to organic harvesters'),
+                        ));
+                      },
+                      child: const Text('Add to Organic Harvesters'),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.add_circle, size: 30),
+            label: 'Add',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// Dummy chat screen for navigation
+class ChatScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Chat'),
+      ),
+      body: const Center(
+        child: Text('Chat Messages'),
+      ),
+    );
   }
 }
