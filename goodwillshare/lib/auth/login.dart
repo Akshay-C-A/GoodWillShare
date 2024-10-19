@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:goodwillshare/donor/donordashboard.dart';
 import 'package:goodwillshare/ngo/ngoDashboard.dart';
-import 'package:goodwillshare/ngo/ngodashboard.dart';
 import 'package:goodwillshare/signUp/signup-page.dart';
 
 class LoginPage extends StatefulWidget {
