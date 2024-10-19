@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:goodwillshare/donor/donordashboard.dart';
+import 'package:goodwillshare/ngo/ngodashboard.dart';
 import 'package:goodwillshare/signUp/signup-page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -16,14 +18,61 @@ class _LoginPageState extends State<LoginPage> {
   String? _emailError;
   String? _passwordError;
 
-  void _navigateToHome(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => DonorDashboard()),
-      );
+  Future<void> _navigateBasedOnUserType(BuildContext context, String uid) async {
+    try {
+      // Get user document from Firestore
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .get();
+
+      if (!userDoc.exists) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('User profile not found')),
+        );
+        return;
+      }
+
+      // Get user type from the document
+      String userType = (userDoc.data() as Map<String, dynamic>)['userType'] ?? '';
+
+      // Navigate based on user type
+      if (mounted) {
+        switch (userType.toUpperCase()) {
+          case 'DONOR':
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => DonorDashboard()),
+            );
+            break;
+          case 'NGO':
+            // Replace with your NGO dashboard
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => NGO_Dashboard()),
+            );
+            break;
+          case 'HARVESTER':
+            // Replace with your Harvester dashboard
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => NGO_Dashboard()),
+            );
+            break;
+          default:
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Invalid user type')),
+            );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error loading user profile')),
+        );
+      }
     }
+    
   }
 
   Future<void> signIn() async {
@@ -59,9 +108,9 @@ class _LoginPageState extends State<LoginPage> {
       );
       
       // Only navigate if sign in was successful
-      if (mounted) {
-        _navigateToHome(context);
-      }
+  if (mounted) {
+  _navigateBasedOnUserType(context, FirebaseAuth.instance.currentUser!.uid);
+}
 
     } on FirebaseAuthException catch (e) {
       setState(() {
