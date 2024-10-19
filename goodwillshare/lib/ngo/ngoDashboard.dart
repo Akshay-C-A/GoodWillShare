@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class DashboardScreen extends StatefulWidget {
+class NGO_Dashboard extends StatefulWidget {
   @override
-  _DashboardScreenState createState() => _DashboardScreenState();
+  _NGO_DashboardState createState() => _NGO_DashboardState();
 }
 
-class _DashboardScreenState extends State<DashboardScreen> {
+class _NGO_DashboardState extends State<NGO_Dashboard> {
   int _selectedIndex = 0;
 
   final List<Map<String, String>> donations = [
@@ -134,7 +134,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.amber[800],
+        selectedItemColor: Colors.green,
         onTap: _onItemTapped,
       ),
        // Only show FAB in dashboard view
