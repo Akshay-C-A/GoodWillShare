@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:goodwillshare/donor/donordashboard.dart';
+import 'package:goodwillshare/signUp/signup-page.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -18,7 +19,6 @@ class _LoginPageState extends State<LoginPage> {
   void _navigateToHome(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      // Replace HomePage() with your actual home page widget
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => DonorDashboard()),
@@ -173,6 +173,33 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 SizedBox(height: 20.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Don't have an account? ",
+                      style: TextStyle(fontSize: 14),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        // Replace SignUpPage() with your actual sign up page widget
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => SignUpPage()),
+                        );
+                      },
+                      child: Text(
+                        "Sign Up",
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.blue,
+                          fontWeight: FontWeight.bold,
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
