@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:goodwillshare/auth/login.dart';
 
 class SignUpPage extends StatefulWidget {
+  const SignUpPage({super.key});
+
   @override
   _SignUpPageState createState() => _SignUpPageState();
 }
@@ -16,10 +18,10 @@ class _SignUpPageState extends State<SignUpPage> {
   String email = '';
   String password = '';
   String name = '';
-  String userType = 'DONER'; // Default value
+  String userType = 'DONOR'; // Default value
   bool isLoading = false;
 
-  List<String> userTypes = ['DONER', 'NGO', 'ORGANIC FARMER'];
+  List<String> userTypes = ['DONOR', 'NGO', 'ORGANIC FARMER'];
 
   void _signUp() async {
     if (_formKey.currentState!.validate()) {
@@ -44,7 +46,7 @@ class _SignUpPageState extends State<SignUpPage> {
         });
 
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Successfully signed up!')),
+          const SnackBar(content: Text('Successfully signed up!')),
         );
 
         // Navigate to home page or next screen
