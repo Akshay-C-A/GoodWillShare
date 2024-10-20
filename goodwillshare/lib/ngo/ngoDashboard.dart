@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:goodwillshare/chat_app/pages/home_page.dart';
+import 'package:goodwillshare/auth/login.dart';
 import 'package:goodwillshare/ngo/ngoAcceptPage.dart';
 import 'package:goodwillshare/ngo/ngoPage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class NGO_Dashboard extends StatefulWidget {
   @override
@@ -11,13 +13,27 @@ class NGO_Dashboard extends StatefulWidget {
 class _NGO_DashboardState extends State<NGO_Dashboard> {
   int _selectedIndex = 0;
 
+  Future<void> _logout() async {
+    try {
+      await FirebaseAuth.instance.signOut();
+      // Navigate to login page after logout
+       Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginPage()),
+                    (route) => false,
+                  ); // Replace with your login route
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error logging out: $e')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     List<Widget> widgetOptions = <Widget>[
       NGO_Page(),
       NGO_Accept_Page(),
-      // RequestPage(),
-      // NotificationsPage(),
     ];
 
     return Scaffold(
@@ -34,6 +50,37 @@ class _NGO_DashboardState extends State<NGO_Dashboard> {
               print('Open chat');
             },
           ),
+          IconButton(
+            icon: Icon(Icons.logout),
+            onPressed: () {
+              // Show confirmation dialog before logging out
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text('Logout'),
+                    content: Text('Are you sure you want to logout?'),
+                    actions: [
+                      TextButton(
+                        child: Text('Cancel'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                      TextButton(
+                        child: Text('Logout'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          _logout();
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+          ),
+          SizedBox(width: 8), // Add some padding after the logout button
         ],
       ),
       body: IndexedStack(
@@ -59,20 +106,11 @@ class _NGO_DashboardState extends State<NGO_Dashboard> {
             icon: Icon(Icons.check_circle),
             label: 'Accepted',
           ),
-          // BottomNavigationBarItem(
-          //   icon: Icon(Icons.add),
-          //   label: 'Post',
-          // ),
-          // BottomNavigationBarItem(
-          //   icon: Icon(Icons.notifications),
-          //   label: 'Notification',
-          // ),
         ],
       ),
     );
   }
 
-  // This is a placeholder for the accepted items list
   Widget _buildAcceptedItems() {
     return Center(
       child: Text('Accepted Items will be shown here'),

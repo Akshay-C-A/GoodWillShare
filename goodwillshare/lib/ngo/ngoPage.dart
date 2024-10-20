@@ -15,9 +15,6 @@ class _NGO_PageState extends State<NGO_Page> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("NGO Page"),
-      ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance.collection('donations').snapshots(),
         builder: (context, snapshot) {
@@ -53,68 +50,77 @@ class _NGO_PageState extends State<NGO_Page> {
       ),
     );
   }
-
-  Widget _buildDonationCard(Map<String, dynamic> donation, String donationId) {
-    String donerMail = donation['userEmail'];
-    return Card(
-      elevation: 2,
-      margin: EdgeInsets.all(8),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ListTile(
-              title: Text(donation['foodName'] ?? 'Unknown Food'),
-              subtitle: Text(
-                'Quantity: ${donation['foodQuantity'] ?? 'N/A'}\n'
-                'Expiry: ${donation['foodExpiry'] ?? 'N/A'}\n'
-                'Address: ${donation['address'] ?? 'N/A'}\n'
-                'Contact: ${donation['contact'] ?? 'N/A'}',
+Widget _buildDonationCard(Map<String, dynamic> donation, String donationId) {
+  String donerMail = donation['userEmail'];
+  return Card(
+    elevation: 2,
+    margin: EdgeInsets.all(8),
+    child: IntrinsicHeight(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    donation['foodName'] ?? 'Unknown Food',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 4),
+                  Text('Quantity: ${donation['foodQuantity'] ?? 'N/A'}'),
+                  Text('Expiry: ${donation['foodExpiry'] ?? 'N/A'}'),
+                  Text('Address: ${donation['address'] ?? 'N/A'}'),
+                  Text('Contact: ${donation['contact'] ?? 'N/A'}'),
+                ],
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                if (donation['status'] ==
-                    "pending") // Only show 'Accept' button for pending items
-                  ElevatedButton(
-                    onPressed: () async {
-                      User? currentUser = FirebaseAuth.instance.currentUser;
-                      String userEmail = currentUser?.email ?? 'anonymous';
-
-                      //to add to ngo accepted list
-                      await FirebaseFirestore.instance
-                          .collection('ngo_accept')
-                          .doc(userEmail)
-                          .collection('acccepted')
-                          .add(donation);
-
-                      await FirebaseFirestore.instance
-                          .collection('donations')
-                          .doc(donationId)
-                          .update({'status': 'accepted'});
-
-                      //to add to doner accept list
-                      await FirebaseFirestore.instance
-                          .collection('doner_accept')
-                          .doc(donerMail)
-                          .collection('accepted')
-                          .add(donation);
-
-                      // TODO: Implement accept functionality
-                      print('Accept: ${donation['foodName']}');
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.amberAccent,
-                    ),
-                    child: Text('Accept'),
+          ),
+          if (donation['status'] == "pending")
+            Container(
+              width: 80,
+              child: Center(
+                child: ElevatedButton(
+                  onPressed: () async {
+                    User? currentUser = FirebaseAuth.instance.currentUser;
+                    String userEmail = currentUser?.email ?? 'anonymous';
+                    //to add to ngo accepted list
+                    await FirebaseFirestore.instance
+                        .collection('ngo_accept')
+                        .doc(userEmail)
+                        .collection('acccepted')
+                        .add(donation);
+                    await FirebaseFirestore.instance
+                        .collection('donations')
+                        .doc(donationId)
+                        .update({'status': 'accepted'});
+                    //to add to doner accept list
+                    await FirebaseFirestore.instance
+                        .collection('doner_accept')
+                        .doc(donerMail)
+                        .collection('accepted')
+                        .add(donation);
+                    print('Accept: ${donation['foodName']}');
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.amberAccent,
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+                    minimumSize: Size(0, 40),
                   ),
-              ],
+                  child: Text('Accept', style: TextStyle(fontSize: 12)),
+                ),
+              ),
             ),
-          ],
-        ),
+        ],
       ),
-    );
-  }
+    ),
+  );
+}
+  
+  
 }

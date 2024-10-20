@@ -21,7 +21,7 @@ class _SignUpPageState extends State<SignUpPage> {
   String userType = 'DONOR'; // Default value
   bool isLoading = false;
 
-  List<String> userTypes = ['DONOR', 'NGO', 'ORGANIC FARMER'];
+  List<String> userTypes = ['DONOR', 'NGO', 'BIO'];
 
   void _signUp() async {
     if (_formKey.currentState!.validate()) {
