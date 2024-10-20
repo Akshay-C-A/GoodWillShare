@@ -12,25 +12,22 @@ class _DonorProfileState extends State<DonorProfile> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text('Donor Profile'),
-          backgroundColor: Colors.teal,
-        ),
-        body: Padding(
+    return Scaffold(
+      
+      body: SingleChildScrollView(
+        child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildProfileInfo(), // Fetch and display donor name
+              _buildProfileInfo(),
               const SizedBox(height: 20),
               const Text(
                 'My Donations',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 10),
-              Expanded(child: _buildDonorPosts()), // Fetch and display donations by the donor
+              _buildDonorPosts(),
             ],
           ),
         ),
@@ -38,12 +35,11 @@ class _DonorProfileState extends State<DonorProfile> {
     );
   }
 
-  // Fetch and display donor's profile info (name and email)
   Widget _buildProfileInfo() {
     return FutureBuilder<DocumentSnapshot>(
       future: FirebaseFirestore.instance
           .collection('donors')
-          .doc(currentUser!.uid)
+          .doc(currentUser?.uid)
           .get(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -52,8 +48,8 @@ class _DonorProfileState extends State<DonorProfile> {
         if (!snapshot.hasData || snapshot.data == null) {
           return const Text('No Profile Info Found');
         }
-        var donorData = snapshot.data!.data() as Map<String, dynamic>;
-        String donorName = donorData['name'] ?? 'Donor';
+        var donorData = snapshot.data!.data() as Map<String, dynamic>?;
+        String donorName = donorData?['name'] ?? 'Donor';
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -64,7 +60,7 @@ class _DonorProfileState extends State<DonorProfile> {
             ),
             const SizedBox(height: 5),
             Text(
-              'Email: ${currentUser!.email}',
+              'Email: ${currentUser?.email ?? 'N/A'}',
               style: const TextStyle(fontSize: 16),
             ),
           ],
@@ -73,12 +69,11 @@ class _DonorProfileState extends State<DonorProfile> {
     );
   }
 
-  // Fetch and display donations posted by the current donor
   Widget _buildDonorPosts() {
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
           .collection('donations')
-          .where('donorEmail', isEqualTo: currentUser!.email)
+          .where('userEmail', isEqualTo: currentUser?.email)
           .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -90,12 +85,14 @@ class _DonorProfileState extends State<DonorProfile> {
         var donations = snapshot.data!.docs;
 
         return ListView.builder(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
           itemCount: donations.length,
           itemBuilder: (context, index) {
             var donationData = donations[index].data() as Map<String, dynamic>;
-            String foodName = donationData['foodName'];
-            String foodQuantity = donationData['foodQuantity'];
-            String foodExpiry = donationData['foodExpiry'];
+            String foodName = donationData['foodName'] ?? 'N/A';
+            String foodQuantity = donationData['foodQuantity']?.toString() ?? 'N/A';
+            String foodExpiry = donationData['foodExpiry'] ?? 'N/A';
 
             return Card(
               margin: const EdgeInsets.symmetric(vertical: 8),
@@ -114,14 +111,12 @@ class _DonorProfileState extends State<DonorProfile> {
     );
   }
 
-  // Function to delete a donation from Firebase
   Future<void> _deleteDonation(String donationId) async {
     await FirebaseFirestore.instance
         .collection('donations')
         .doc(donationId)
         .delete();
 
-    // Show a success message
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Donation deleted successfully!')),
     );
