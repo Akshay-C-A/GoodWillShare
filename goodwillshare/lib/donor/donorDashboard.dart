@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:goodwillshare/donor/donorProfile.dart';
 import 'addnewDonation.dart'; // Import the addnewDonation page
 
 class DonorDashboard extends StatefulWidget {
@@ -19,10 +20,19 @@ class _DonorDashboardState extends State<DonorDashboard> {
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
-      if (_selectedIndex == 1) { // Check if 'Add' tab is selected
+
+      // Navigate to different pages based on selected index
+      if (_selectedIndex == 1) {
+        // Navigate to addNewDonation page when 'Add' tab is selected
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => addnewDonation()), // Navigate to the addnewDonation page
+          MaterialPageRoute(builder: (context) => addnewDonation()),
+        );
+      } else if (_selectedIndex == 2) {
+        // Navigate to DonorProfile page when 'Profile' tab is selected
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => donorProfile()),
         );
       }
     });
