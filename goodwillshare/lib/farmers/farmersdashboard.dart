@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:goodwillshare/auth/login.dart';
+import 'package:goodwillshare/chat_app/pages/home_page.dart';
 import 'package:goodwillshare/farmers/farmerpage.dart';
 import 'package:goodwillshare/farmers/farmerprofile.dart';
 import 'package:goodwillshare/farmers/farmersacceptpage.dart';
@@ -7,7 +8,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class OrganicFarmersDashboard extends StatefulWidget {
   @override
-  _OrganicFarmersDashboardState createState() => _OrganicFarmersDashboardState();
+  _OrganicFarmersDashboardState createState() =>
+      _OrganicFarmersDashboardState();
 }
 
 class _OrganicFarmersDashboardState extends State<OrganicFarmersDashboard> {
@@ -67,6 +69,8 @@ class _OrganicFarmersDashboardState extends State<OrganicFarmersDashboard> {
             icon: const Icon(Icons.chat),
             tooltip: 'Chat',
             onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => ChatHomePage()));
               // TODO: Implement chat functionality
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(

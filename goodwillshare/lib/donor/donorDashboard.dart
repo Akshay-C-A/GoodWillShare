@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:goodwillshare/auth/login.dart';
+import 'package:goodwillshare/chat_app/pages/home_page.dart';
 import 'package:goodwillshare/donor/addnewDonation.dart';
 import 'package:goodwillshare/donor/donorHomePage.dart';
 import 'package:goodwillshare/donor/donorProfile.dart';
@@ -33,11 +34,11 @@ class _DonorDashboardState extends State<DonorDashboard> {
     try {
       await _auth.signOut();
       // Navigate to login screen after logout
-        Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (context) => LoginPage()),
-                    (route) => false,
-                  );// Replace with your login route
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => LoginPage()),
+        (route) => false,
+      ); // Replace with your login route
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error logging out: ${e.toString()}')),
@@ -59,6 +60,8 @@ class _DonorDashboardState extends State<DonorDashboard> {
           IconButton(
             icon: Icon(Icons.chat),
             onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => ChatHomePage()));
               print('Open chat');
             },
           ),
