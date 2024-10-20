@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class OrganicHarvestersAcceptPage extends StatefulWidget {
@@ -13,10 +14,12 @@ class _OrganicHarvestersAcceptPageState
     extends State<OrganicHarvestersAcceptPage> {
   @override
   Widget build(BuildContext context) {
+      User? currentUser = FirebaseAuth.instance.currentUser;
+    String userEmail = currentUser?.email ?? 'anonymous';
     return Scaffold(
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
-            .collection('farmers_accept')
+            .collection('farmers_accept').doc(userEmail).collection('accepted')
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {

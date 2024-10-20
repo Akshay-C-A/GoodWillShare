@@ -12,7 +12,7 @@ class NGO_Accept_Page extends StatefulWidget {
 class _NGO_Accept_PageState extends State<NGO_Accept_Page> {
   @override
   Widget build(BuildContext context) {
-    User? currentUser = FirebaseAuth.instance.currentUser;
+   User? currentUser = FirebaseAuth.instance.currentUser;
     String userEmail = currentUser?.email ?? 'anonymous';
     return Scaffold(
       body: StreamBuilder<QuerySnapshot>(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:goodwillshare/auth/login.dart';
 import 'package:goodwillshare/farmers/farmerpage.dart';
+import 'package:goodwillshare/farmers/farmerprofile.dart';
 import 'package:goodwillshare/farmers/farmersacceptpage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -12,20 +13,37 @@ class OrganicFarmersDashboard extends StatefulWidget {
 class _OrganicFarmersDashboardState extends State<OrganicFarmersDashboard> {
   int _selectedIndex = 0;
 
+  // Get appropriate title based on selected index
+  String _getTitle() {
+    switch (_selectedIndex) {
+      case 0:
+        return 'Organic Farmer';
+      case 1:
+        return 'Accepted Items';
+      case 2:
+        return 'Profile';
+      default:
+        return 'Organic Farmer';
+    }
+  }
+
   Future<void> _logout() async {
     try {
       await FirebaseAuth.instance.signOut();
       if (mounted) {
         Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (context) => LoginPage()),
-                    (route) => false,
-                  ); // Replace with your login route
+          context,
+          MaterialPageRoute(builder: (context) => LoginPage()),
+          (route) => false,
+        );
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error logging out: $e')),
+          SnackBar(
+            content: Text('Error logging out: $e'),
+            backgroundColor: Colors.red,
+          ),
         );
       }
     }
@@ -36,25 +54,32 @@ class _OrganicFarmersDashboardState extends State<OrganicFarmersDashboard> {
     List<Widget> widgetOptions = <Widget>[
       OrganicFarmersPage(),
       OrganicHarvestersAcceptPage(),
+      FarmerProfile(),
     ];
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(_selectedIndex == 0 ? 'Organic Farmers Dashboard' : 'Accepted Items'),
+        title: Text(_getTitle()),
         backgroundColor: const Color.fromARGB(255, 195, 202, 243),
+        elevation: 2,
         actions: [
           IconButton(
             icon: const Icon(Icons.chat),
+            tooltip: 'Chat',
             onPressed: () {
               // TODO: Implement chat functionality
-              print('Open chat');
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Chat feature coming soon!'),
+                  duration: Duration(seconds: 2),
+                ),
+              );
             },
           ),
-          // Add logout button
           IconButton(
             icon: const Icon(Icons.logout),
+            tooltip: 'Logout',
             onPressed: () {
-              // Show confirmation dialog before logging out
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
@@ -63,13 +88,19 @@ class _OrganicFarmersDashboardState extends State<OrganicFarmersDashboard> {
                     content: const Text('Are you sure you want to logout?'),
                     actions: [
                       TextButton(
-                        child: const Text('Cancel'),
+                        child: const Text(
+                          'Cancel',
+                          style: TextStyle(color: Colors.grey),
+                        ),
                         onPressed: () {
                           Navigator.of(context).pop();
                         },
                       ),
                       TextButton(
-                        child: const Text('Logout'),
+                        child: const Text(
+                          'Logout',
+                          style: TextStyle(color: Colors.red),
+                        ),
                         onPressed: () {
                           Navigator.of(context).pop();
                           _logout();
@@ -81,12 +112,14 @@ class _OrganicFarmersDashboardState extends State<OrganicFarmersDashboard> {
               );
             },
           ),
-          const SizedBox(width: 8), // Add some padding after the logout button
+          const SizedBox(width: 8),
         ],
       ),
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: widgetOptions,
+      body: SafeArea(
+        child: IndexedStack(
+          index: _selectedIndex,
+          children: widgetOptions,
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
@@ -102,33 +135,20 @@ class _OrganicFarmersDashboardState extends State<OrganicFarmersDashboard> {
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
+            tooltip: 'Home Page',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.check_circle),
             label: 'Accepted',
+            tooltip: 'Accepted Items',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+            tooltip: 'User Profile',
           ),
         ],
       ),
-    );
-  }
-}
-
-// Placeholder for Organic Farmers home page
-class OrganicFarmersHomePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: Text('Organic Farmers Home Page'),
-    );
-  }
-}
-
-// Placeholder for Organic Farmers accepted items page
-class OrganicFarmersAcceptedPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: Text('Accepted Items will be shown here'),
     );
   }
 }
