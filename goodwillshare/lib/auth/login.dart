@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:goodwillshare/donor/donordashboard.dart';
+import 'package:goodwillshare/farmers/farmersdashboard.dart';
 import 'package:goodwillshare/ngo/ngoDashboard.dart';
 import 'package:goodwillshare/signUp/signup-page.dart';
 
@@ -52,11 +53,11 @@ class _LoginPageState extends State<LoginPage> {
               MaterialPageRoute(builder: (context) => NGO_Dashboard()),
             );
             break;
-          case 'HARVESTER':
+          case 'BIO':
             // Replace with your Harvester dashboard
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => NGO_Dashboard()),
+              MaterialPageRoute(builder: (context) => OrganicFarmersDashboard()),
             );
             break;
           default:
