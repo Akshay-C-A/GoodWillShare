@@ -54,12 +54,12 @@ class _DonorProfileState extends State<DonorProfile> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Name: $userName',
+              '$userName',
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 5),
             Text(
-              'Email: ${currentUser?.email ?? 'N/A'}',
+              '${currentUser?.email ?? 'N/A'}',
               style: const TextStyle(fontSize: 16),
             ),
           ],
