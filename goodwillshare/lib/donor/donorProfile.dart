@@ -13,7 +13,6 @@ class _DonorProfileState extends State<DonorProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -38,7 +37,7 @@ class _DonorProfileState extends State<DonorProfile> {
   Widget _buildProfileInfo() {
     return FutureBuilder<DocumentSnapshot>(
       future: FirebaseFirestore.instance
-          .collection('donors')
+          .collection('users')  // Changed from 'donors' to 'users'
           .doc(currentUser?.uid)
           .get(),
       builder: (context, snapshot) {
@@ -48,15 +47,15 @@ class _DonorProfileState extends State<DonorProfile> {
         if (!snapshot.hasData || snapshot.data == null) {
           return const Text('No Profile Info Found');
         }
-        var donorData = snapshot.data!.data() as Map<String, dynamic>?;
-        String donorName = donorData?['name'] ?? 'Donor';
+        var userData = snapshot.data!.data() as Map<String, dynamic>?;
+        String userName = userData?['name'] ?? 'User';  // Fetch name from 'name' field
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Name: $donorName',
-              style: const TextStyle(fontSize: 18),
+              'Name: $userName',
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 5),
             Text(
