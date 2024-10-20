@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class DonorHomePage extends StatefulWidget {
   const DonorHomePage({Key? key}) : super(key: key);
@@ -49,7 +50,7 @@ class _DonorHomePageState extends State<DonorHomePage> with SingleTickerProvider
               controller: _tabController,
               children: [
                 _buildAcceptedFoodTab(userEmail),
-                _buildExpiredFoodTab(userEmail),
+                _buildExpiredFoodWidget(context),
               ],
             ),
           ),
@@ -93,33 +94,97 @@ class _DonorHomePageState extends State<DonorHomePage> with SingleTickerProvider
     );
   }
 
-  Widget _buildExpiredFoodTab(String userEmail) {
-    User? currentUser = FirebaseAuth.instance.currentUser;
-    return ListView.builder(
-      itemCount: 3, // Replace with actual expired food length if you're pulling from Firestore
-      itemBuilder: (context, index) {
-        String expiredFoodItem = 'Expired Item ${index + 1}'; // Replace with actual expired items
-        return ListTile(
-          title: Text(expiredFoodItem),
-          trailing: ElevatedButton(
-            onPressed: () async {
-              if (currentUser != null) {
-                await FirebaseFirestore.instance
-                    .collection('expired_food')
-                    .doc(userEmail)
-                    .collection('accepted')
-                    .add({'FoodName': expiredFoodItem});
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text('$expiredFoodItem added to organic harvesters'),
-                ));
-              }
-            },
-            child: const Text('Add to Organic Harvesters'),
-          ),
-        );
-      },
-    );
-  }
+ Widget _buildExpiredFoodWidget(BuildContext context) {
+  User? currentUser = FirebaseAuth.instance.currentUser;
+  String userEmail = currentUser?.email ?? 'anonymous';
+
+  return StreamBuilder<QuerySnapshot>(
+    stream: FirebaseFirestore.instance.collection('donations').snapshots(),
+    builder: (context, snapshot) {
+      if (snapshot.hasError) {
+        return Text('Error: ${snapshot.error}');
+      }
+
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return CircularProgressIndicator();
+      }
+
+      List<DocumentSnapshot> expiredDonations = snapshot.data!.docs.where((doc) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        DateTime? expiryDate = data['foodExpiry'] != null
+            ? DateFormat('yyyy-MM-dd').parse(data['foodExpiry'])
+            : null;
+        DateTime currentDate = DateTime.now();
+        DateTime currentDateWithoutTime = DateTime(currentDate.year, currentDate.month, currentDate.day);
+        return expiryDate != null && expiryDate.isBefore(currentDateWithoutTime);
+      }).toList();
+
+      return ListView.builder(
+        itemCount: expiredDonations.length,
+        itemBuilder: (context, index) {
+          Map<String, dynamic> donation = expiredDonations[index].data() as Map<String, dynamic>;
+          String donationId = expiredDonations[index].id;
+
+          return Card(
+            elevation: 2,
+            margin: const EdgeInsets.all(8),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ListTile(
+                    title: Text(donation['foodName'] ?? 'Unknown Food'),
+                    subtitle: Text(
+                      'Quantity: ${donation['foodQuantity'] ?? 'N/A'}\n'
+                      'Expiry: ${donation['foodExpiry'] ?? 'N/A'}\n'
+                      'Address: ${donation['address'] ?? 'N/A'}\n'
+                      'Contact: ${donation['contact'] ?? 'N/A'}',
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      'EXPIRED',
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      if (currentUser != null) {
+                        await FirebaseFirestore.instance
+                            .collection('expired_food')
+                            .doc(userEmail)
+                            .collection('accepted')
+                            .add(
+                          donation
+                        );
+                        
+                        // Delete the expired donation from the 'donations' collection
+                        await FirebaseFirestore.instance
+                            .collection('donations')
+                            .doc(donationId)
+                            .delete();
+
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text('${donation['foodName']} added to organic harvesters'),
+                        ));
+                      }
+                    },
+                    child: const Text('Add to Organic Harvesters'),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+    },
+  );
+}
 
   Widget _buildDonationCard(Map<String, dynamic> donation, String donationId) {
     return Card(
