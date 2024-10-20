@@ -112,7 +112,7 @@ Widget _buildDonationCard(Map<String, dynamic> donation, String donationId) {
                     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 0),
                     minimumSize: Size(0, 40),
                   ),
-                  child: Text('Accept', style: TextStyle(fontSize: 12)),
+                  child: Text('Accept', style: TextStyle(fontSize: 10)),
                 ),
               ),
             ),
