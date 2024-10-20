@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:goodwillshare/auth/login.dart';
 import 'package:goodwillshare/farmers/farmerpage.dart';
 import 'package:goodwillshare/farmers/farmersacceptpage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class OrganicFarmersDashboard extends StatefulWidget {
   @override
@@ -10,12 +12,30 @@ class OrganicFarmersDashboard extends StatefulWidget {
 class _OrganicFarmersDashboardState extends State<OrganicFarmersDashboard> {
   int _selectedIndex = 0;
 
+  Future<void> _logout() async {
+    try {
+      await FirebaseAuth.instance.signOut();
+      if (mounted) {
+        Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginPage()),
+                    (route) => false,
+                  ); // Replace with your login route
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error logging out: $e')),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     List<Widget> widgetOptions = <Widget>[
-      OrganicFarmersPage(), // Replace with your organic farmers homepage widget
-      OrganicHarvestersAcceptPage(), // Replace with the organic farmers accepted items widget
-      // Add more pages if needed (requests, notifications, etc.)
+      OrganicFarmersPage(),
+      OrganicHarvestersAcceptPage(),
     ];
 
     return Scaffold(
@@ -30,6 +50,38 @@ class _OrganicFarmersDashboardState extends State<OrganicFarmersDashboard> {
               print('Open chat');
             },
           ),
+          // Add logout button
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () {
+              // Show confirmation dialog before logging out
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text('Logout'),
+                    content: const Text('Are you sure you want to logout?'),
+                    actions: [
+                      TextButton(
+                        child: const Text('Cancel'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                      TextButton(
+                        child: const Text('Logout'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          _logout();
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+          ),
+          const SizedBox(width: 8), // Add some padding after the logout button
         ],
       ),
       body: IndexedStack(
@@ -65,7 +117,7 @@ class _OrganicFarmersDashboardState extends State<OrganicFarmersDashboard> {
 class OrganicFarmersHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return const Center(
       child: Text('Organic Farmers Home Page'),
     );
   }
@@ -75,7 +127,7 @@ class OrganicFarmersHomePage extends StatelessWidget {
 class OrganicFarmersAcceptedPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return const Center(
       child: Text('Accepted Items will be shown here'),
     );
   }

@@ -134,7 +134,13 @@ class _DonorHomePageState extends State<DonorHomePage> with SingleTickerProvider
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   ListTile(
-                    title: Text(donation['foodName'] ?? 'Unknown Food'),
+                    title: Text(donation['foodName'] ?? 'Unknown Food',
+                     style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    ),
+                   
                     subtitle: Text(
                       'Quantity: ${donation['foodQuantity'] ?? 'N/A'}\n'
                       'Expiry: ${donation['foodExpiry'] ?? 'N/A'}\n'
@@ -196,7 +202,12 @@ class _DonorHomePageState extends State<DonorHomePage> with SingleTickerProvider
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ListTile(
-              title: Text(donation['foodName'] ?? 'Unknown Food'),
+              title: Text(donation['foodName'] ?? 'Unknown Food',
+               style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
               subtitle: Text(
                 'Quantity: ${donation['foodQuantity'] ?? 'N/A'}\n'
                 'Expiry: ${donation['foodExpiry'] ?? 'N/A'}\n'
