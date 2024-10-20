@@ -15,9 +15,6 @@ class _NGO_Accept_PageState extends State<NGO_Accept_Page> {
     User? currentUser = FirebaseAuth.instance.currentUser;
     String userEmail = currentUser?.email ?? 'anonymous';
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Accepted Items"),
-      ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection('ngo_accept')
