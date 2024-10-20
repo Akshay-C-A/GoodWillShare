@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:goodwillshare/chat_app/pages/home_page.dart';
 import 'package:goodwillshare/ngo/ngoAcceptPage.dart';
 import 'package:goodwillshare/ngo/ngoPage.dart';
 
@@ -27,6 +28,8 @@ class _NGO_DashboardState extends State<NGO_Dashboard> {
           IconButton(
             icon: Icon(Icons.chat),
             onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => ChatHomePage()));
               // TODO: Implement chat functionality
               print('Open chat');
             },
