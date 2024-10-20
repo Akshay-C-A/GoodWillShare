@@ -163,8 +163,6 @@ class _DonorHomePageState extends State<DonorHomePage> with SingleTickerProvider
                       if (currentUser != null) {
                         await FirebaseFirestore.instance
                             .collection('expired_food')
-                            .doc(userEmail)
-                            .collection('accepted')
                             .add(
                           donation
                         );
