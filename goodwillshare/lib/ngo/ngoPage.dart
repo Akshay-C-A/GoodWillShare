@@ -15,9 +15,6 @@ class _NGO_PageState extends State<NGO_Page> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("NGO Page"),
-      ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance.collection('donations').snapshots(),
         builder: (context, snapshot) {
