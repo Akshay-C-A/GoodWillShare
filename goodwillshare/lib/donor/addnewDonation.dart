@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart'; // Add this import for date formatting
 
 class addnewDonation extends StatefulWidget {
   @override
@@ -56,13 +57,24 @@ class _addnewDonationState extends State<addnewDonation> {
     }
   }
 
+  // Function to show date picker
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null) {
+      setState(() {
+        _foodExpiryController.text = DateFormat('yyyy-MM-dd').format(picked);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Post a Donation'),
-        backgroundColor: Colors.teal,
-      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -106,13 +118,19 @@ class _addnewDonationState extends State<addnewDonation> {
                 const SizedBox(height: 10),
                 TextFormField(
                   controller: _foodExpiryController,
-                  decoration: const InputDecoration(
-                    labelText: 'Food Expiry Date (YYYY-MM-DD)',
+                  decoration: InputDecoration(
+                    labelText: 'Food Expiry Date',
                     border: OutlineInputBorder(),
+                    suffixIcon: IconButton(
+                      icon: Icon(Icons.calendar_today),
+                      onPressed: () => _selectDate(context),
+                    ),
                   ),
+                  readOnly: true, // Make the text field read-only
+                  onTap: () => _selectDate(context), // Show date picker on tap
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter the expiry date';
+                      return 'Please select the expiry date';
                     }
                     return null;
                   },

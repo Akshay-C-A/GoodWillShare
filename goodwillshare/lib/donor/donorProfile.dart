@@ -2,35 +2,37 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class donorProfile extends StatefulWidget {
+class DonorProfile extends StatefulWidget {
   @override
-  _donorProfileState createState() => _donorProfileState();
+  _DonorProfileState createState() => _DonorProfileState();
 }
 
-class _donorProfileState extends State<donorProfile> {
+class _DonorProfileState extends State<DonorProfile> {
   final User? currentUser = FirebaseAuth.instance.currentUser;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Donor Profile'),
-        backgroundColor: Colors.teal,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildProfileInfo(), // Fetch and display donor name
-            const SizedBox(height: 20),
-            const Text(
-              'My Donations',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-            Expanded(child: _buildDonorPosts()), // Fetch and display donations by the donor
-          ],
+    return SingleChildScrollView(
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('Donor Profile'),
+          backgroundColor: Colors.teal,
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildProfileInfo(), // Fetch and display donor name
+              const SizedBox(height: 20),
+              const Text(
+                'My Donations',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 10),
+              Expanded(child: _buildDonorPosts()), // Fetch and display donations by the donor
+            ],
+          ),
         ),
       ),
     );
